@@ -16,14 +16,14 @@ namespace ShopMuseoProgettoFinale.Controllers
                 
         }
 
-        //----------------------------------------------------------------------
+//---------------------------------------------------------------------
         [HttpGet]
         public IActionResult CreateProduct()
         {
 
             return View();
         }
-        //------------------------------------------------------
+//---------------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -43,7 +43,7 @@ namespace ShopMuseoProgettoFinale.Controllers
 
             return RedirectToAction("Index");
         }
-        //--------------------------------------------------------------
+//---------------------------------------------------------------------
         [HttpGet]
         public IActionResult UpdateProduct(int id)
         {
@@ -58,14 +58,12 @@ namespace ShopMuseoProgettoFinale.Controllers
                 } else
                 {
                     return NotFound("il prodotto non è stato trovato, non esiste");
-                }
-               
+                }          
             }
         }
-        //-----------------------------------------------------------------
+//---------------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public IActionResult UpdateProduct(int id, Product formData)
         {
             using(ApplicationDbContext db = new ApplicationDbContext())
@@ -87,9 +85,8 @@ namespace ShopMuseoProgettoFinale.Controllers
                     return RedirectToAction("Index");
                 }
             }
-
         }
-        //--------------------------------------------------
+//---------------------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteProduct(int id) {
@@ -97,7 +94,6 @@ namespace ShopMuseoProgettoFinale.Controllers
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
                 Product productFound = db.Products.Find(id);
-
                 if(productFound != null)
                 {
                     db.Products.Remove(productFound);
@@ -107,15 +103,9 @@ namespace ShopMuseoProgettoFinale.Controllers
                 {
                     return NotFound("il prodotto da cancellare non è stato trovato");
                 }
-
-
             }
- 
         }
-
-        //-------------------------------------------------
-
-
+//---------------------------------------------------------------------
        //Metodi per Purchases
        public IActionResult PurchasesView()
         {
@@ -126,6 +116,57 @@ namespace ShopMuseoProgettoFinale.Controllers
 
             }
         }
+//---------------------------------------------------------------------
+        [HttpGet]
+        public IActionResult PurchaseCreate(int id)
+        {
+            using(ApplicationDbContext db = new ApplicationDbContext())
+            {
+                    Product productFound = db.Products.Find(id);
+                    if (productFound != null)
+                    {
+                        return NotFound("questo prodotto non puoi acquistare");
+                    }
+                    else
+                    {
+                        PurchaseProductView modelPurchase = new PurchaseProductView();
+                        modelPurchase.Product = productFound;
+                        modelPurchase.Quantity = 0;
+                        return View("PurchaseCreate",modelPurchase);
+                    }  
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult PurchaseCreate(PurchaseProductView formData)
+        {
+            //qua arriverà quanità che vuole acquistare e nome, 
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("PurchaseCreate",formData);
+                }
+                else
+                {
+                    Purchase newPurchase = new Purchase();
+                    newPurchase.Date = DateOnly.FromDateTime(DateTime.Now);
+                    newPurchase.Quantity = formData.Quantity;
+                    newPurchase.PurchasedProduct = formData.Product;
+                    db.Purchases.Add(newPurchase);
+                    db.SaveChanges();
+                    return RedirectToAction("PurchasesView");
+                }
+            }
+
+        }
+        //--------------------------
+
+
+
+
 
 
     }
