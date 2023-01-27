@@ -5,12 +5,13 @@ using ShopMuseoProgettoFinale.Models;
 
 namespace ShopMuseoProgettoFinale.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class UserApiController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        [Route("products")]
+        public IActionResult Products()
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
@@ -26,7 +27,8 @@ namespace ShopMuseoProgettoFinale.Controllers
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
 
-                Product productFound = db.Products.Where(p=>p.Id == id).FirstOrDefault();
+                Product productFound = db.Products.Find(id); //ti da prodotto che ha trovato o ti da nullo. cerca se c'è un elemento con quell'id. 
+
                 if (productFound != null)
                 {
                     return NotFound("l'articolo che hai cercato non esiste");
