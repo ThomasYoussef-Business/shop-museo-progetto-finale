@@ -22,6 +22,7 @@ namespace ShopMuseoProgettoFinale.Controllers
             }
         }
         //----------------------------
+        [Route("details")]
         public IActionResult Details(int id)
         {
             using(ApplicationDbContext db = new ApplicationDbContext())
@@ -29,7 +30,7 @@ namespace ShopMuseoProgettoFinale.Controllers
 
                 Product productFound = db.Products.Find(id); //ti da prodotto che ha trovato o ti da nullo. cerca se c'è un elemento con quell'id. 
 
-                if (productFound != null)
+                if (productFound == null)
                 {
                     return NotFound("l'articolo che hai cercato non esiste");
                 } else
@@ -40,6 +41,56 @@ namespace ShopMuseoProgettoFinale.Controllers
             }
         }
         //-----------------------------------
+
+        [Route("purchase")]
+        [HttpGet]
+        public IActionResult Purchase(int id)
+        {
+            using(ApplicationDbContext db = new ApplicationDbContext())
+            {
+                Product productFound = db.Products.Find(id);
+                if (productFound != null)
+                {
+                    return Ok("questo prodotto non puoi acquistare");
+                } else
+                {
+                    PurchaseProductView modelPurchase = new PurchaseProductView();
+                    modelPurchase.Product = productFound;
+                    modelPurchase.Quantity = 0;
+                    return Ok(modelPurchase);
+                }
+            }
+        }
+
+        [Route("purchase")]
+        [HttpPost]
+
+        public IActionResult Purchase(PurchaseProductView formData)
+        {
+            //qua arriverà quanità che vuole acquistare e nome, 
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Ok(formData);
+                }
+                else
+                {
+                    Purchase newPurchase = new Purchase();
+                    newPurchase.Date = DateOnly.FromDateTime(DateTime.Now);
+                    newPurchase.Quantity = formData.Quantity;
+                    newPurchase.PurchasedProduct = formData.Product;
+                    db.Purchases.Add(newPurchase);
+                    db.SaveChanges();
+                    return Ok(newPurchase);
+                    
+
+                }
+
+
+            }
+        }
 
     }
 }
