@@ -18,7 +18,7 @@ namespace ShopMuseoProgettoFinale.Controllers
 
         //----------------------------------------------------------------------
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateProduct()
         {
 
             return View();
@@ -27,7 +27,7 @@ namespace ShopMuseoProgettoFinale.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Create(Product formData)
+        public IActionResult CreateProduct(Product formData)
         {
             if(!ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace ShopMuseoProgettoFinale.Controllers
         }
         //--------------------------------------------------------------
         [HttpGet]
-        public IActionResult Update(int id)
+        public IActionResult UpdateProduct(int id)
         {
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
@@ -53,7 +53,7 @@ namespace ShopMuseoProgettoFinale.Controllers
 
                 if(productFound != null)
                 {
-                    return View("Update", productFound);
+                    return View("UpdateProduct", productFound);
 
                 } else
                 {
@@ -66,14 +66,14 @@ namespace ShopMuseoProgettoFinale.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Update(int id, Product formData)
+        public IActionResult UpdateProduct(int id, Product formData)
         {
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
                 if (!ModelState.IsValid)
                 {
 
-                    return View("Update", formData);
+                    return View("UpdateProduct", formData);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace ShopMuseoProgettoFinale.Controllers
         //--------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) {
+        public IActionResult DeleteProduct(int id) {
         
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
@@ -114,5 +114,17 @@ namespace ShopMuseoProgettoFinale.Controllers
         }
 
         //-------------------------------------------------
+
+
+       //Metodi per Purchases
+       public IActionResult PurchasesView()
+        {
+            using(ApplicationDbContext db = new ApplicationDbContext())
+            {
+
+            }
+            return View();
+        }
+
     }
 }
