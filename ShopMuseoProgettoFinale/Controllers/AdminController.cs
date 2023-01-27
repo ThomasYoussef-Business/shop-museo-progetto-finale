@@ -121,10 +121,12 @@ namespace ShopMuseoProgettoFinale.Controllers
         {
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
+                List<Purchase> purchaseList = db.Purchases.ToList();
+                return View("PurchasesView", purchaseList);
 
             }
-            return View();
         }
+
 
     }
 }
