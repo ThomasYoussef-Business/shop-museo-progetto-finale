@@ -105,7 +105,7 @@ namespace ShopMuseoProgettoFinale.Controllers
                 }
             }
         }
-//---------------------------------------------------------------------
+//---------------------------------------------------------------
        //Metodi per Purchases
        public IActionResult PurchasesView()
         {
@@ -157,12 +157,21 @@ namespace ShopMuseoProgettoFinale.Controllers
                     newPurchase.PurchasedProduct = formData.Product;
                     db.Purchases.Add(newPurchase);
                     db.SaveChanges();
+
+                    //ADESSO dimnuire la quantità nel magazzino del prodotto
+
+                    int PurchasedProductId = newPurchase.PurchasedProduct.Id;
+                    Stock aggiornaStock = db.Stocks.Find(PurchasedProductId);
+                    aggiornaStock.Quantity = aggiornaStock.Quantity -formData.Quantity;
+
                     return RedirectToAction("PurchasesView");
                 }
             }
 
         }
-        //--------------------------
+        //--------------------------RESUPPLIES--------------
+
+
 
 
 
