@@ -182,6 +182,50 @@ namespace ShopMuseoProgettoFinale.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult ResupplyCreate()
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext()) {
+                List<Product> listaProdotti = db.Products.ToList();
+                ProductResupplyView newModelView = new ProductResupplyView();
+                newModelView.ProductList = listaProdotti;
+
+            return View(newModelView);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResupplyCreate(ProductResupplyView formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    List<Product> listaProdotti = db.Products.ToList();
+                    formData.ProductList= listaProdotti;
+                    return View("ResupplyCreate", formData);
+                }
+            }else
+            {
+                using(ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    Resupply newResupply = new Resupply();
+                    //qua non sono sicura perchè in db non capisco come è fatta la relaizone
+                    newResupply.PurchasedProduct = formData.Resupply.PurchasedProduct;
+                   //--------------------------------------
+                    newResupply.Quantity = formData.Resupply.Quantity;
+                    newResupply.SupplierName = formData.Resupply.SupplierName;
+                    newResupply.Price = formData.Resupply.Price;
+
+                    db.SaveChanges();
+                    return RedirectToAction("ViewResupplies");
+                }
+
+            }
+        }
+
+
         
 
 
