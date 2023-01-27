@@ -25,7 +25,7 @@ namespace ShopMuseoProgettoFinale.Controllers
         [Route("details")]
         public IActionResult Details(int id)
         {
-            using(ApplicationDbContext db = new ApplicationDbContext())
+            using (ApplicationDbContext db = new ApplicationDbContext())
             {
 
                 Product productFound = db.Products.Find(id); //ti da prodotto che ha trovato o ti da nullo. cerca se c'è un elemento con quell'id. 
@@ -40,13 +40,25 @@ namespace ShopMuseoProgettoFinale.Controllers
 
             }
         }
-        //-----------------------------------
+        //-----------------------------------PURCHASE
+        [Route("purchasesView")]
+        [HttpGet]
+        public IActionResult purchasesView()
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            { 
+ List<Purchase> purchasesList = db.Purchases.ToList<Purchase>();
+                return Ok(purchasesList);
+            }
 
+        }
+
+        
         [Route("purchase")]
         [HttpGet]
         public IActionResult Purchase(int id)
         {
-            using(ApplicationDbContext db = new ApplicationDbContext())
+            using (ApplicationDbContext db = new ApplicationDbContext())
             {
                 Product productFound = db.Products.Find(id);
                 if (productFound != null)
@@ -84,13 +96,17 @@ namespace ShopMuseoProgettoFinale.Controllers
                     db.Purchases.Add(newPurchase);
                     db.SaveChanges();
                     return Ok(newPurchase);
-                    
 
                 }
 
 
             }
         }
+
+       
+
+        //----------------------------------------------RESUPPLIES
+     
 
     }
 }
