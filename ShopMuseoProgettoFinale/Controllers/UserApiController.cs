@@ -40,8 +40,69 @@ namespace ShopMuseoProgettoFinale.Controllers
                 }
 
             }
-        }      
-        
+        }
+        //-----------------------------------------
+        [Route("Purchase")]
+        [HttpGet("{id}")]
+        public IActionResult PurchaseCreate(int id)
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                Product productFound = db.Products.Find(id);
+                if (productFound != null)
+                {
+                    return NotFound("questo prodotto non puoi acquistare");
+                }
+                else
+                {
+                    PurchaseProductView modelPurchase = new PurchaseProductView();
+                    modelPurchase.Product = productFound;
+                    modelPurchase.Quantity = 0;
+                    return Ok(modelPurchase);
+                }
+            }
+        }
+        [Route("Purchase")]
+        [HttpPost]
+        public IActionResult PurchaseCreate(PurchaseProductView formData)
+        {
+            //qua arriverà quanità che vuole acquistare e nome, 
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Ok(formData);
+                }
+                else
+                {
+                    Purchase newPurchase = new Purchase();
+                    newPurchase.Date = DateOnly.FromDateTime(DateTime.Now);
+                    newPurchase.Quantity = formData.Quantity;
+                    newPurchase.PurchasedProduct = formData.Product;
+                    db.Purchases.Add(newPurchase);
+
+                    //ADESSO dimnuire la quantità nel magazzino del prodotto
+
+                    int PurchasedProductId = newPurchase.PurchasedProduct.Id;
+                    Stock aggiornaStock = db.Stocks.Find(PurchasedProductId);
+
+                    aggiornaStock.Quantity = aggiornaStock.Quantity - formData.Quantity;
+                    
+
+
+                    db.SaveChanges();
+
+
+                    return RedirectToAction("products");
+                }
+            }
+
+        }
+
+        //-------------------------------------------------------------------
+
+
 
     }
 }
