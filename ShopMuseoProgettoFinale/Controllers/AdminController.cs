@@ -170,7 +170,19 @@ namespace ShopMuseoProgettoFinale.Controllers
 
         }
         //--------------------------RESUPPLIES--------------
-      
+        [HttpGet]
+        public IActionResult ViewResupplies()
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                List<Resupply> resupplyLista = db.Resupplies.ToList();
+
+                return View(resupplyLista);
+            }
+
+        }
+
+        
 
 
 
