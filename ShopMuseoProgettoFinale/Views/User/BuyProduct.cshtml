@@ -1,0 +1,23 @@
+﻿@{
+}
+
+@model PurchaseProductView
+
+<div class="container">
+
+    <form asp-controller="User" asp-action="BuyProduct" method="post" class="title-card bg-tabella py-4 px-4">
+        @Html.AntiForgeryToken()
+
+        <h3>You are buying a product @Model.Product.Name</h3>
+        <h4>Date of purchase: @Model.Purchase.Date.ToString()</h4>
+
+        <div class="mb-3">
+            <label>Choose your Quantity</label>
+            <input asp-for="Purchase.Quantity" type="text" class="form-control" />
+            <span asp-validation-for="Purchase.Quantity" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn mybutton">Salva</button>
+    </form>
+
+</div>
