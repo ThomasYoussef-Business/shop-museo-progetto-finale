@@ -60,7 +60,6 @@ namespace ShopMuseoProgettoFinale.Controllers {
                 }
                 else
                 {
-
                     db.Purchases.Add(formData.Purchase);
                     int quantity = formData.Purchase.Quantity;
                     Stock stock = db.Stocks.Where(p => p.ProductId == formData.Product.Id).FirstOrDefault();
