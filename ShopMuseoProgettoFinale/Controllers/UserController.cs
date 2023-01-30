@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShopMuseoProgettoFinale.Database;
 using ShopMuseoProgettoFinale.Models;
 using System.Diagnostics;
 
@@ -22,9 +23,21 @@ namespace ShopMuseoProgettoFinale.Controllers {
         {
             return View();
         }
-        public IActionResult Buy()
+        public IActionResult Buy(int id)
         {
-            return View();
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                Product productFound = db.Products.Where(p => p.Id == id).FirstOrDefault();
+
+                if (productFound is null)
+                {
+                    return NotFound("il prodotto non è stato trovato");
+                }
+                else
+                {
+                    return View("Buy", productFound);
+                }
+            }
         }
 
 
