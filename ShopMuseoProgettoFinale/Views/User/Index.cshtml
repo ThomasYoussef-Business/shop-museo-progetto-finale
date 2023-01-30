@@ -6,25 +6,26 @@
     <link rel="stylesheet" href="~/css/Index.css" />
 }
 
-<div class="header-main-bar">
-    <div class="logo-search-container">
-        @*logo*@
-        <div class="logo cols-xs-12 cols-md-4">
-            <a class="navbar-logo">
-                <img class="logo-img" src="~/lib/img/elephant-logo-element-line-art-animal-illustration-vector_53876-151363.webp" alt="MuseumLogo" />
-            </a>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-between">
+        <div class="col-12 col-sm-2 p-0">
+            <img class="logo-img img-fluid object-fit-cover" src="~/lib/img/elephant-logo-element-line-art-animal-illustration-vector_53876-151363.webp" alt="MuseumLogo" />
         </div>
-        <div class="welcome-title"></div>
-        @*  searchInput  *@
-        <div class="cols-xs-12 col-sm-9 col-md-4" id="search">
-            <form>
-                <input type="text" class="" placeholder="Find your product..." />
-            </form>
+        <div class="col-12 col-sm-8 text-center d-flex flex-column justify-content-center align-items-center">
+            <h1>Museum Shop</h1>
+        </div>
+        <div class="col-2">
+            <span class="invisible">lorem</span>
         </div>
     </div>
-    @*-----------------------------------*@
 </div>
-@*-------------------------Finito Header----------------------------*@
+
+@section SearchBar{
+    <form class="d-flex" role="search">
+        <input id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+}
 
 <div class="slide-pictures-container">
 
@@ -79,8 +80,12 @@
     </div>
 
 
-    <div id="productsDiv" class="row"></div>
-    <div id="noProductsDiv"> No Producst To Show </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-9">
+            <div id="productsDiv" class="row d-none g-5"></div>
+            <div id="noProductsDiv" class="d-none"> No Products To Show </div>
+        </div>
+    </div>
 
 </div>
 
@@ -90,10 +95,11 @@
 
         loadList();
 
-        document.getElementById("search").addEventListener("keyup", searchProducts);
+        searchBar = document.getElementById("search");
+        searchBar.addEventListener("keyup", searchProducts);
 
         function searchProducts() {
-            let stringaDiRicerca = document.getElementById("search").value;
+            let stringaDiRicerca = searchBar.value;
 
             console.log(stringaDiRicerca);
             loadList(stringaDiRicerca);
@@ -118,29 +124,31 @@
                     document.querySelector("#noProductsDiv").classList.add("d-none");
 
                     document.querySelector("#productsDiv").innerHTML = "";
+                    formatter = Intl.NumberFormat("en-us", {
+                        style: 'currency',
+                        currency: 'EUR'
+                    })
 
                     res.data.forEach(product => {
 
                         document.querySelector("#productsDiv").innerHTML += `
-                                  <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-2">
-
-                                  <div class="card h-100">
-                                  <img src="${product.pictureUrl}" class="card-image-top" >
-
-
-                                  <div class="card-body">
-                                                        <h5 class="card-title">${product.name}</h5>
-
-                                                        <p class="card-text">${product.description}</p>
-                                                        <p class="card-text">${product.price}</p>
-                                                                 <a class="btn btn-primary" href="/User/Details/${product.id}">Dettagli</a>
-                                                                <a class="btn btn-primary" href="/User/Buy/">Buy</a>
-                                                      </div>
-
-                                  </div>
-
-                                  </div>
-                                  `;
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-2">
+                        <div class="card h-100 border border-0">
+                            <div class="ratio ratio-4x3">
+                                <img src="${product.pictureUrl}" class="card-img-top rounded-0">
+                            </div>
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <h5 class="card-title lead">${product.name}</h5>
+                                <p class="card-text lead fs-6">${product.description}</p>
+                                <p class="card-text mt-auto">${formatter.format(product.price)}</p>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a class="btn btn-outline-dark rounded-0" href="/User/Details/${product.id}">Dettagli</a>
+                                    <a class="btn btn-outline-dark rounded-0" href="/User/Buy/">Buy</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                                                          `;
                     });
                 }
 
